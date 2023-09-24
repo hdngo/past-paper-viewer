@@ -1,0 +1,339 @@
+﻿<Window x:Class="PastPaperViewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="#E1E2E3"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        xmlns:local="clr-namespace:PastPaperViewer"
+        mc:Ignorable="d"
+        Title="Past Paper Viewer" WindowState="Maximized" WindowStyle="SingleBorderWindow" Width="1920" Height="1080" Name="BigWindow" Closed="RememberSettings">
+    <Window.Resources>
+        <Storyboard x:Key="ButtonFadeIn">
+            <DoubleAnimation From="0" To="0.5" Duration="00:00:0.25" Storyboard.TargetName="OpenMenuButton" Storyboard.TargetProperty="Opacity">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="ButtonFadeOut">
+            <DoubleAnimation From="0.5" To="0" Duration="00:00:0.25" Storyboard.TargetName="OpenMenuButton" Storyboard.TargetProperty="Opacity">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="MenuClose">
+            <DoubleAnimation From="400" To="0" Duration="00:00:0.25" Storyboard.TargetName="RightPanel" Storyboard.TargetProperty="Width">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="MenuOpen">
+            <DoubleAnimation From="0" To="400" Duration="00:00:0.25" Storyboard.TargetName="RightPanel" Storyboard.TargetProperty="Width">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="OptionsFadeIn">
+            <DoubleAnimation From="0.5" To="1" Duration="00:00:0.50" Storyboard.TargetName="OptionsPanel" Storyboard.TargetProperty="Opacity">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="OptionsFadeOut">
+            <DoubleAnimation From="1" To="0.5" Duration="00:00:0.50" Storyboard.TargetName="OptionsPanel" Storyboard.TargetProperty="Opacity">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="OptionsOpen">
+            <DoubleAnimation From="25" To="270" Duration="00:00:0.25" Storyboard.TargetName="OptionsPanel" Storyboard.TargetProperty="Height">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="OptionsClose">
+            <DoubleAnimation From="270" To="25" Duration="00:00:0.25" Storyboard.TargetName="OptionsPanel" Storyboard.TargetProperty="Height">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="CardFadeIn">
+            <DoubleAnimation From="0.5" To="1" Duration="00:00:0.50" Storyboard.TargetName="RightPanel" Storyboard.TargetProperty="Opacity">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="CardFadeOut">
+            <DoubleAnimation From="1" To="0.5" Duration="00:00:0.50" Storyboard.TargetName="RightPanel" Storyboard.TargetProperty="Opacity">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <SolidColorBrush x:Key="AccentColor" Color="#3BC9AD" />
+        <SolidColorBrush x:Key="FadeOutColor" Color="#018378" />
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="OpenMenuButton">
+            <BeginStoryboard Storyboard="{StaticResource MenuOpen}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="CloseMenuButton">
+            <BeginStoryboard Storyboard="{StaticResource MenuClose}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="StackPanel.MouseEnter" SourceName="OptionsPanel">
+            <BeginStoryboard Storyboard="{StaticResource OptionsFadeIn}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="StackPanel.MouseLeave" SourceName="OptionsPanel">
+            <BeginStoryboard Storyboard="{StaticResource OptionsFadeOut}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Grid.MouseEnter" SourceName="ButtonGrid">
+            <BeginStoryboard Storyboard="{StaticResource ButtonFadeIn}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Grid.MouseLeave" SourceName="ButtonGrid">
+            <BeginStoryboard Storyboard="{StaticResource ButtonFadeOut}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="materialDesign:Card.MouseEnter" SourceName="RightPanel">
+            <BeginStoryboard Storyboard="{StaticResource CardFadeIn}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="materialDesign:Card.MouseLeave" SourceName="RightPanel">
+            <BeginStoryboard Storyboard="{StaticResource CardFadeOut}" />
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid Name="BigGrid">
+        <!--Question paper and Mark Scheme window-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <materialDesign:Card Panel.ZIndex="2" Name="QuestionPaperCard" Grid.Column="0" Background="#D2D2D4" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid>
+                    <cefSharp:ChromiumWebBrowser Name="QuestionPaperWindow"/>
+                    <Border IsHitTestVisible="False">
+                        <Rectangle Name="DarkFilterQp" Fill="Black" Opacity="{Binding Value, ElementName=BrightnessSlider}" />
+                    </Border>
+                    <!--<Button Background="{DynamicResource FadeOutColor}" Height="60" Width="50" Opacity="0.5" Padding="0" MouseEnter="OnMouseButton" MouseLeave="LeaveMouseButton" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
+                        <materialDesign:PackIcon Background="{DynamicResource FadeOutColor}" Kind="BookmarkAdd" Width="40" Height="40"/>
+                    </Button>-->
+                </Grid>
+            </materialDesign:Card>
+            <GridSplitter Name="MyGridSplitter" Grid.Column="1" Width="5" Margin="10" HorizontalAlignment="Stretch"/>
+            <materialDesign:Card Panel.ZIndex="1" Name="MarkSchemeCard" Grid.Column="2" Background="#D2D2D4" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid>
+                    <cefSharp:ChromiumWebBrowser Name="MarkSchemeWindow"/>
+                    <Border IsHitTestVisible="False">
+                        <Rectangle Name="DarkFilterMs" Fill="Black" Opacity="{Binding Value, ElementName=BrightnessSlider}" />
+                    </Border>
+                    <!--<Button Background="{DynamicResource FadeOutColor}" Height="60" Width="50" Opacity="0.5" Padding="0" MouseEnter="OnMouseButton" MouseLeave="LeaveMouseButton" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
+                        <materialDesign:PackIcon Background="{DynamicResource FadeOutColor}"  Kind="BookmarkAdd" Width="40" Height="40"/>
+                    </Button>-->
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
+        <Button Click="MoveMarkScheme" Background="{DynamicResource AccentColor}" BorderBrush="{DynamicResource AccentColor}" materialDesign:ShadowAssist.ShadowDepth="Depth0" Name="SwapButton" MouseEnter="OnMouseButton" MouseLeave="LeaveMouseButton" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity="0.5" Height="40" Width="70" Margin="10">
+            <materialDesign:PackIcon Kind="ArrowRotateRight" Height="25" Width="25"/>
+        </Button>
+
+        <!--Right panel-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Grid Width="100" Height="100" Name="ButtonGrid" Margin="0,0,30,0">
+                <Grid.Background>
+                    <SolidColorBrush Opacity="0"/>
+                </Grid.Background>
+                <Button Background="{DynamicResource FadeOutColor}" BorderBrush="{DynamicResource FadeOutColor}" Click="ChangeButton" MouseEnter="OnMouseButton" MouseLeave="LeaveMouseButton" x:Name="FakeOpenMenuButton" VerticalAlignment="Center" Opacity="1" Margin="10" Height="40" Width="60" HorizontalAlignment="Right">
+                    <materialDesign:PackIcon Background="{DynamicResource FadeOutColor}" Kind="ArrowLeftBold" Height="30" Width="30"/>
+                </Button>
+                <Button Background="{DynamicResource FadeOutColor}" BorderBrush="{DynamicResource FadeOutColor}" Click="ChangeButton" MouseEnter="OnMouseButton" MouseLeave="LeaveMouseButton" x:Name="OpenMenuButton" VerticalAlignment="Center" Opacity="0" Margin="10" Height="40" Width="60" HorizontalAlignment="Right">
+                    <materialDesign:PackIcon Background="{DynamicResource FadeOutColor}" Kind="ArrowLeftBold" Height="30" Width="30"/>
+                </Button>
+                <Button Background="{DynamicResource FadeOutColor}" BorderBrush="{DynamicResource FadeOutColor}" Click="ChangeButton" MouseEnter="OnMouseButton" MouseLeave="LeaveMouseButton" x:Name="CloseMenuButton" VerticalAlignment="Center" Opacity="{Binding ElementName=OpenMenuButton,Path=Opacity}" Margin="10" Height="40" Width="60" Visibility="Hidden" HorizontalAlignment="Right">
+                    <materialDesign:PackIcon Background="{DynamicResource FadeOutColor}" Kind="ArrowRightBold" Height="30" Width="30"/>
+                </Button>
+            </Grid>
+            <materialDesign:Card Opacity="0.5" Width="0" Name="RightPanel" materialDesign:ShadowAssist.ShadowDepth="Depth5" materialDesign:ShadowAssist.ShadowEdges="Left" materialDesign:ShadowAssist.Darken="True" HorizontalAlignment="Right" Background="#F7F7F8" Height="{Binding ElementName=BigGrid, Path=ActualHeight}">
+                <Grid Name="BigSubgrid" ShowGridLines="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid VerticalAlignment="Stretch" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="FirstMenuBorder" Height="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=ActualHeight}" Background="{DynamicResource AccentColor}">
+                            <Button ToolTip="Question View" BorderBrush="{DynamicResource AccentColor}" materialDesign:RippleAssist.IsDisabled="True" x:Name="FirstMenu" Click="ChangeSearch" Margin="0" HorizontalAlignment="Stretch" Height="40" VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth0" Background="{x:Null}">
+                                <materialDesign:PackIcon Name="PaperIcon" Kind="Paper" Height="30" Width="30"/>
+                            </Button>
+                        </Border>
+                        <Border x:Name="SecondMenuBorder" Grid.Column="1" Height="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=ActualHeight}" Background="{StaticResource FadeOutColor}">
+                            <Button ToolTip="Question Search" BorderBrush="{StaticResource FadeOutColor}" materialDesign:RippleAssist.IsDisabled="True" x:Name="SecondMenu"  Click="ChangeSearch" Margin="0" HorizontalAlignment="Stretch" Height="40" VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth0" Background="{x:Null}">
+                                <materialDesign:PackIcon Name="MagnifyIcon" Kind="Magnify" Height="30" Width="30" Foreground="#FFAEAEAE"/>
+                            </Button>
+                        </Border>
+                    </Grid>
+                    <StackPanel Grid.Row="1" >
+                        <materialDesign:Card VerticalAlignment="Top" materialDesign:ShadowAssist.ShadowDepth="Depth4" UniformCornerRadius="0" materialDesign:ShadowAssist.ShadowEdges="Bottom" Background="{DynamicResource AccentColor}" >
+                            <StackPanel>
+                                <ComboBox Grid.Row="0" SelectionChanged="SubjectChanged" Foreground="White" materialDesign:HintAssist.Hint="Choose your subject!" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" Name="SubjectChosen" FontSize="17" Margin="25,20,25,10">
+                                    <ComboBoxItem>9231 - Further Mathematics</ComboBoxItem>
+                                    <ComboBoxItem>9608 - Computer Science</ComboBoxItem>
+                                    <ComboBoxItem>9609 - Business</ComboBoxItem>
+                                    <ComboBoxItem>9700 - Biology</ComboBoxItem>
+                                    <ComboBoxItem>9701 - Chemistry</ComboBoxItem>
+                                    <ComboBoxItem>9702 - Physics</ComboBoxItem>
+                                    <ComboBoxItem>9708 - Economics</ComboBoxItem>
+                                    <ComboBoxItem>9709 - Mathematics</ComboBoxItem>
+                                </ComboBox>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox SelectionChanged="UpdateFiles" Name="Year" IsEnabled="False" Foreground="White" materialDesign:HintAssist.Hint="Year" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="17" Margin="25,10,25,10">
+                                        <ComboBoxItem>All</ComboBoxItem>
+                                        <ComboBoxItem>2015</ComboBoxItem>
+                                        <ComboBoxItem>2016</ComboBoxItem>
+                                        <ComboBoxItem>2017</ComboBoxItem>
+                                        <ComboBoxItem>2018</ComboBoxItem>
+                                        <ComboBoxItem>2019</ComboBoxItem>
+                                    </ComboBox>
+                                    <ComboBox SelectionChanged="UpdateFiles" Name="Session" IsEnabled="False"  Grid.Column="1" Foreground="White" materialDesign:HintAssist.Hint="Session" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="17" Margin="25,10,25,10">
+                                        <ComboBoxItem>All</ComboBoxItem>
+                                        <ComboBoxItem>March</ComboBoxItem>
+                                        <ComboBoxItem>May/June</ComboBoxItem>
+                                        <ComboBoxItem>Oct/Nov</ComboBoxItem>
+                                    </ComboBox>
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox Name="YearSearch" Visibility="Collapsed" IsEnabled="False" Foreground="White" materialDesign:HintAssist.Hint="Year" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="17" Margin="25,10,25,25">
+                                        <ComboBoxItem>All</ComboBoxItem>
+                                        <ComboBoxItem>2015</ComboBoxItem>
+                                        <ComboBoxItem>2016</ComboBoxItem>
+                                        <ComboBoxItem>2017</ComboBoxItem>
+                                        <ComboBoxItem>2018</ComboBoxItem>
+                                        <ComboBoxItem>2019</ComboBoxItem>
+                                    </ComboBox>
+                                    <ComboBox Name="SessionSearch" Visibility="Collapsed" IsEnabled="False"  Grid.Column="1" Foreground="White" materialDesign:HintAssist.Hint="Session" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="17" Margin="25,10,25,25">
+                                        <ComboBoxItem>All</ComboBoxItem>
+                                        <ComboBoxItem>March</ComboBoxItem>
+                                        <ComboBoxItem>May/June</ComboBoxItem>
+                                        <ComboBoxItem>Oct/Nov</ComboBoxItem>
+                                    </ComboBox>
+                                </Grid>
+                                <ComboBox Name="SearchType" materialDesign:HintAssist.Hint="Search type" Visibility="Collapsed" IsEnabled="False" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="17" Margin="25,10,25,25">
+                                    <ComboBoxItem>Question Paper</ComboBoxItem>
+                                    <ComboBoxItem>Mark Scheme</ComboBoxItem>
+                                </ComboBox>
+                                <Grid Margin="0,0,10,0" Name="SearchGrid">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="4*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox TextChanged="UpdateFilesViaText" IsEnabled="False" x:Name="NameSearch" FontSize="17" Foreground="White" materialDesign:HintAssist.Hint="Name search" Margin="25,20,25,20" Height="{Binding ElementName=SubjectChosen, Path=ActualHeight}">
+                                        <TextBox.ToolTip>
+                                            <MediaElement Source="name_search.mp4" Width="350px" MediaEnded="Media_Ended" LoadedBehavior="Play"/>
+                                        </TextBox.ToolTip>
+                                    </TextBox>
+                                    <Button ToolTip="Choose a random paper!" Background="{DynamicResource FadeOutColor}" BorderBrush="{DynamicResource FadeOutColor}" IsEnabled="False" Name="RandomButton" Click="OpenRandomPaper" Grid.Column="1" Width="50" Height="40">
+                                        <materialDesign:PackIcon IsEnabled="False" Name="ShuffleIcon" Kind="Shuffle" IsHitTestVisible="False" Grid.Column="1" Width="25" Height="25" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Button>
+                                    
+                                </Grid>
+                                <Grid x:Name="QuestionSearchGrid" Visibility="Collapsed">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox KeyDown="OnEnter" IsEnabled="False" x:Name="QuestionSearch" FontSize="17" Foreground="White" materialDesign:HintAssist.Hint="Question search" Margin="25,10,25,20" Height="{Binding ElementName=SubjectChosen, Path=ActualHeight}">
+                                        <TextBox.ToolTip>
+                                            <MediaElement Source="question_search.mp4" Width="350px" MediaEnded="Media_Ended" LoadedBehavior="Play"/>
+                                        </TextBox.ToolTip>
+                                    </TextBox>
+                                    <Button ToolTip="Search for papers with the keyword!" Background="{DynamicResource FadeOutColor}" BorderBrush="{DynamicResource FadeOutColor}" Name="QuestionSearchButton" IsEnabled="False" Grid.Column="1" Margin="0,10,25,20" Width="50" Height="40" Click="StartSearch">
+                                        <materialDesign:PackIcon Background="{DynamicResource FadeOutColor}" Kind="Magnify" Width="25" Height="25" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Button>
+                                </Grid>
+                                <TextBox Visibility="Collapsed" TextChanged="UpdateFilesViaTextSearch" IsEnabled="False" x:Name="FilterSearchText" FontSize="17" Foreground="White" materialDesign:HintAssist.Hint="Filter search" Margin="25,10,35,20" Height="{Binding ElementName=SubjectChosen, Path=ActualHeight}">
+                                    <TextBox.ToolTip>
+                                        <MediaElement Source="filter_search.mp4" Width="350px" MediaEnded="Media_Ended" LoadedBehavior="Play"/>
+                                    </TextBox.ToolTip>
+                                </TextBox>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                    </StackPanel>
+
+                    <ListView Grid.Row="2" VerticalAlignment="Top" SelectionChanged="ViewFiles" Name="ListOfFiles" FontSize="17" Margin="25,20,25,25" ScrollViewer.CanContentScroll="True">
+                        <!--Items go here-->
+                    </ListView>
+
+                    <ListView Grid.Row="2" SelectionChanged="ViewFilesSearch" Name="ListOfFilesSearch" Visibility="Collapsed" FontSize="17" Margin="25,20,25,25" ScrollViewer.CanContentScroll="True">
+                        <!--Items go here-->
+                    </ListView>
+
+                    <materialDesign:Card Grid.Row="3" VerticalAlignment="Bottom" Margin="10,0,10,10">
+                        <Grid>
+                            <ProgressBar BorderBrush="{DynamicResource FadeOutColor}" Background="{DynamicResource FadeOutColor}" Foreground="{DynamicResource AccentColor}" Name="MyProgressBar" materialDesign:TransitionAssist.DisableTransitions="True" Height="30" Minimum="0"/>
+                            <TextBlock Name="ProgressText" Foreground="White" Text="Progress" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Grid>
+                    </materialDesign:Card>
+                </Grid>
+            </materialDesign:Card>
+        </StackPanel>
+
+        <!--Options panel-->
+        <Grid x:Name="OptionsPanel" MouseEnter="EnterMouseOption" MouseLeave="LeaveMouseOption" Height="25" Opacity="0.5" Background="{DynamicResource AccentColor}" Margin="10,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Column="0">
+                <Button ToolTip="Change Layout: Swap between double and single layout" Click="ChangeLayout" materialDesign:ShadowAssist.ShadowDepth="Depth0" Name="ViewModeButton" Margin="10,10,10,0" Width="50" Height="50" BorderBrush="{DynamicResource AccentColor}" Background="{DynamicResource AccentColor}">
+                    <materialDesign:PackIcon Name="LayoutIcon" Width="20" Height="20" Kind="BoxShadow" />
+                </Button>
+                <Button ToolTip="Toggle Night mode: Swaps into a darker-themed version of the app" Click="ToggleNightMode" materialDesign:ShadowAssist.ShadowDepth="Depth0"  Name="NightModeButton" Margin="10,0,10,0" Width="50" Height="50" BorderBrush="{DynamicResource AccentColor}" Background="{DynamicResource AccentColor}">
+                    <materialDesign:PackIcon Width="20" Height="20" Kind="WeatherPartlyCloudy" Name="DarkModeIcon"/>
+                </Button>
+                <Button ToolTip="Show Information: Credits, etc."  materialDesign:ShadowAssist.ShadowDepth="Depth0" Click="ShowInfo" Name="InfoButton" Margin="10,0,10,0" Width="50" Height="50" BorderBrush="{DynamicResource AccentColor}" Background="{DynamicResource AccentColor}">
+                    <materialDesign:PackIcon Width="20" Height="20" Kind="Information" />
+                </Button>
+                <Grid>
+                    <xctk:ColorPicker Width="20" ShowTabHeaders="False" UsingAlphaChannel="False" DisplayColorAndName="False" DisplayColorTooltip="False" ColorMode="ColorCanvas"  SelectedColorChanged="ChangeDynamicColor" materialDesign:ShadowAssist.ShadowDepth="Depth0" Name="CustomColorPicker" Visibility="Hidden"/>
+                    <Button Name="ColorPicker" ToolTip="Theme Color: Changes the accent color of the app" Click="ColorButtonClick" materialDesign:ShadowAssist.ShadowDepth="Depth0" Margin="10,0,10,0" Width="50" Height="50" BorderBrush="{DynamicResource AccentColor}" Background="{DynamicResource AccentColor}">
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="FormatColorFill" />
+                    </Button>
+                </Grid>
+                <Button ToolTip="Reset: Reset all settings" Click="ResetSettings" materialDesign:ShadowAssist.ShadowDepth="Depth0" Name="ResetButton" Margin="10,0,10,0" Width="50" Height="50" BorderBrush="{DynamicResource AccentColor}" Background="{DynamicResource AccentColor}">
+                    <materialDesign:PackIcon Width="20" Height="20" Kind="FormatColorReset" />
+                </Button>
+            </StackPanel>
+            <Slider Background="{DynamicResource AccentColor}" Grid.Column="1" Orientation="Vertical" Height="220" Margin="0,25,0,25" Maximum="0.5" Value="0" Name="BrightnessSlider" IsDirectionReversed="True"/>
+        </Grid>
+    </Grid>
+</Window>
